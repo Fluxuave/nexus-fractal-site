@@ -1,13 +1,72 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modelo Interativo Nexus Fractal</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Interativo – Nexus Fractal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      background-color: #000;
+    }
+    #layerLabel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Modelo Interativo Nexus Fractal</h1>
-  <p>Conteúdo interativo em construção. Em breve você poderá navegar pelas camadas 81, 729, 6561 e visualizar os caminhos de fluxo fractal de energia e dados.</p>
+<div id="layerLabel">Camada: 81</div>
+<canvas id="fractalCanvas"></canvas>
+<script>
+  const canvas = document.getElementById('fractalCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let layer = 0;
+  const layers = [81, 729, 6561];
+  const colors = ['#00f9ff', '#00ff80', '#ff00c8'];
+
+  function drawGrid(size, color) {
+    const cellSize = canvas.width / Math.sqrt(size);
+    const cols = Math.floor(canvas.width / cellSize);
+    const rows = Math.floor(canvas.height / cellSize);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        ctx.strokeRect(i * cellSize, j * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+
+  function renderLayer() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(layers[layer], colors[layer]);
+    document.getElementById('layerLabel').innerText = `Camada: ${layers[layer]}`;
+  }
+
+  canvas.addEventListener('click', () => {
+    layer = (layer + 1) % layers.length;
+    renderLayer();
+  });
+
+  renderLayer();
+</script>
 </body>
 </html>
